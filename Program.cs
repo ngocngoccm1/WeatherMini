@@ -14,34 +14,39 @@ namespace WeatherBot
         {
             MainAsync().GetAwaiter().GetResult();
         }
+    static async Task MainAsync()
+    {
+        // Ưu tiên 1: Đọc từ Environment Variable (Railway/cloud)
+        // Ưu tiên 2: Đọc từ appsettings.json (chỉ để local dev, optional)
+        var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: true)  // optional: true → không bắt buộc
+            .AddJsonFile("appsettings.Development.json", optional: true)
+            .AddEnvironmentVariables()  // Env var có ưu tiên cao nhất
+            .Build();
 
-        static async Task MainAsync()
+        string token = config["Discord:Token"]
+                    ?? Environment.GetEnvironmentVariable("DISCORD_TOKEN");  // Backup cách đọc trực tiếp
+
+        if (string.IsNullOrEmpty(token))
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false)
-                .AddJsonFile("appsettings.Development.json", optional: true) // Chỉ tồn tại ở máy bạn
-                .AddEnvironmentVariables()
-                .Build();
-
-            var discord = new DiscordClient(new DiscordConfiguration()
-            {
-                Token = configuration["Discord:Token"] ?? throw new Exception("Token not found!"),
-                TokenType = TokenType.Bot,
-                Intents = DiscordIntents.AllUnprivileged | DiscordIntents.MessageContents
-            });
-            
-
-            var slash = discord.UseSlashCommands();
-
-            slash.RegisterCommands<WeatherCommands>();
-
-            await discord.ConnectAsync();
-            Console.WriteLine("Bot đang online!");
-            await Task.Delay(-1);
+            throw new Exception("Token not found! Hãy set env var DISCORD_TOKEN trên Railway hoặc thêm vào appsettings.json để chạy local.");
         }
-    }
 
+        var discord = new DiscordClient(new DiscordConfiguration()
+        {
+            Token = token,
+            TokenType = TokenType.Bot,
+            Intents = DiscordIntents.AllUnprivileged | DiscordIntents.MessageContents
+        });
+
+        var slash = discord.UseSlashCommands();
+        slash.RegisterCommands<WeatherCommands>();
+
+        await discord.ConnectAsync();
+        Console.WriteLine("Bot đang online!");
+        await Task.Delay(-1);
+    }
     public class WeatherCommands : ApplicationCommandModule
     {
         private readonly HttpClient httpClient = new HttpClient();
@@ -109,4 +114,4 @@ namespace WeatherBot
             };
         }
     }
-}
+}}
