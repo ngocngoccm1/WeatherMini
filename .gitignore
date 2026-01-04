@@ -1,6 +1,9 @@
 # .NET
 bin/
 obj/
+/publish/
+*.dll
+*.exe
 *.csproj.user
 *.suo
 *.user

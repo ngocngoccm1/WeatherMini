@@ -21,6 +21,7 @@ namespace WeatherBot
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false)
                 .AddJsonFile("appsettings.Development.json", optional: true) // Chỉ tồn tại ở máy bạn
+                .AddEnvironmentVariables()
                 .Build();
 
             var discord = new DiscordClient(new DiscordConfiguration()

@@ -16,7 +16,7 @@ Một bot Discord hiện đại cung cấp dự báo thời tiết chính xác c
 
 ## 🖼️ Demo
 
-![Bot Demo]
+
 ![alt text](image.png)  
 
 ## 🚀 Cách chạy
