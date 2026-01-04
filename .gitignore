@@ -1,0 +1,23 @@
+# .NET
+bin/
+obj/
+*.csproj.user
+*.suo
+*.user
+
+# Config cá nhân
+appsettings.Development.json
+
+# Secrets
+secrets.json
+*.env
+
+# VS Code
+.vscode/
+
+# NuGet
+packages/
+*.nupkg
+
+# Logs
+*.log
