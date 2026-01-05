@@ -34,7 +34,10 @@ namespace WeatherBot.Bot
                 Intents = DiscordIntents.AllUnprivileged | DiscordIntents.MessageContents
             });
 
-            var slash = _discord.UseSlashCommands();
+            var slash = _discord.UseSlashCommands(new SlashCommandsConfiguration
+            {
+                Services = _provider
+            });
             slash.RegisterCommands<WeatherCommands>();
 
             await _discord.ConnectAsync();
