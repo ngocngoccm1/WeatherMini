@@ -39,6 +39,7 @@ namespace WeatherBot.Bot
                 Services = _provider
             });
             slash.RegisterCommands<WeatherCommands>();
+            slash.RegisterCommands<ContextMenuCommands>();
 
             await _discord.ConnectAsync();
             Console.WriteLine("Bot đang online!");
